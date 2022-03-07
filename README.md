@@ -1,1 +1,0 @@
-# Informatics_two_term_Kharin_Ildar
