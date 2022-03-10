@@ -186,27 +186,93 @@ class List:
         self.node = self.node.next
         return node.data
 
+    def __getitem__(self, item):
+        if self.length >= item:
+            node = self.head
+            # for _ in range(item-1):
+            #     node = node.next
+            i = 0
+            while i < item:
+                node = node.next
+                i += 1
+            return node.data
+
+    def __setitem__(self, key, value):
+        if self.length >= key:
+            node = self.head
+            # for _ in range(key-1):
+            #     node = node.next
+            i = 0
+            while i < key:
+                node = node.next
+                i += 1
+            node.data = value
+
+    def create_none(self, size):
+        if self.length == 0:
+            for i in range(size):
+                self.add_node(None)
+            return self
+
 
 class HashMap:
     class InnerLinkedList:
         pass
 
     def __init__(self, _size):
-        self._inner_list = [None] * _size
-        # self. _inner_list = List()
+        # self._inner_list = [None] * _size
+        self._inner_list = List().create_none(_size)
+        # for i in range(_size):
+        #     self._inner_list.add_node(None)
         self._size = _size
         self._cnt = 0
 
     def __getitem__(self, key):
-        return self._inner_list[hash(key) % self._size][1]
+        try:
+            result = self._inner_list[hash(key) % self._size]
+        except KeyError:
+            return KeyError("Ключ не найден.")
+        if result is None:
+            return None
+        return result[1]
 
     def __setitem__(self, key, value):
         self._inner_list[hash(key) % self._size] = (key, value)
         self._cnt += 1
         if self._cnt >= 0.8 * self._size:
             self._size *= 2
-            new_inner_list = [None] * self._size
+            # new_inner_list = [None] * self._size
+            new_inner_list = List().create_none(self._size)
             for i in self._inner_list:
                 if i is not None:
                     new_inner_list[hash(i[0]) % self._size] = i
             self._inner_list = new_inner_list
+
+    def __delitem__(self, key):
+        try:
+            self._inner_list[key] = None
+        except KeyError:
+            return KeyError("Ключ не найден.")
+
+# sp = List()
+# for i in range(5):
+#     sp.add_node(None)
+# sp.output()
+# print("-----------------")
+# # for i in range(5):
+# #     sp[i] = i
+# sp[4] = 0
+# sp[1] = 1
+# sp.output()
+# print("-----------------")
+# print(sp[3])
+# print("-----------------")
+# sp[3] = 10
+# print(sp[3])
+
+# dp = HashMap(10)
+# for i in range(15):
+#     dp[i] = f"{i*5/2}"
+#
+# for i in range(20):
+#     print(dp[i])
