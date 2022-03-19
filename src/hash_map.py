@@ -216,16 +216,13 @@ class List:
 
 
 class HashMap:
-    class InnerLinkedList:
-        pass
-
     def __init__(self, _size):
-        # self._inner_list = [None] * _size
         self._inner_list = List().create_none(_size)
-        # for i in range(_size):
-        #     self._inner_list.add_node(None)
         self._size = _size
         self._cnt = 0
+
+    def get_size(self):
+        return self._size
 
     def __getitem__(self, key):
         try:
@@ -254,25 +251,24 @@ class HashMap:
         except KeyError:
             return KeyError("Ключ не найден.")
 
-# sp = List()
-# for i in range(5):
-#     sp.add_node(None)
-# sp.output()
-# print("-----------------")
-# # for i in range(5):
-# #     sp[i] = i
-# sp[4] = 0
-# sp[1] = 1
-# sp.output()
-# print("-----------------")
-# print(sp[3])
-# print("-----------------")
-# sp[3] = 10
-# print(sp[3])
+    def to_string(self):
+        result = ""
+        for i in self._inner_list:
+            try:
+                result += str(i[0]) + "\t" + str(i[1])
+            except:
+                result += "None"
+            result += "\n"
+        return result
 
-# dp = HashMap(10)
-# for i in range(15):
-#     dp[i] = f"{i*5/2}"
-#
-# for i in range(20):
-#     print(dp[i])
+    @classmethod
+    def from_string(cls, string):
+        st = string.split("\n")
+        result = HashMap(len(st))
+        for i in st:
+            try:
+                j = i.split("\t")
+                result[int(j[0])] = j[1]
+            except:
+                continue
+        return result
