@@ -80,7 +80,7 @@ class TreeMap:
     def __getitem__(self, key):
         try:
             return self.find(key).data
-        except:
+        except (TypeError, AttributeError):
             raise KeyError("Элемента с таким ключом нет.")
 
     def find_knot_with_min_key(self, beginning=None):

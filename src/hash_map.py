@@ -132,7 +132,6 @@ class List:
         node = self.head
         if node.compare_data(value):
             self.del_head()
-            self.length -= 1
             if for_all is False:
                 return
         while node.next.next is not None:
@@ -161,7 +160,7 @@ class List:
 
     def reverse(self):
         new_list = List()
-        for i in range(self.length):
+        for _ in range(self.length):
             new_list.add_node(self.get_last())
             self.del_tail()
         self.head = new_list.head
@@ -210,14 +209,16 @@ class List:
 
     def create_none(self, size):
         if self.length == 0:
-            for i in range(size):
+            for _ in range(size):
                 self.add_node(None)
             return self
 
 
 class HashMap:
     def __init__(self, _size):
-        self._inner_list = List().create_none(_size)
+        self._inner_list = List()
+        for _ in range(_size):
+            self._inner_list.add_node(List())
         self._size = _size
         self._cnt = 0
 
@@ -225,50 +226,76 @@ class HashMap:
         return self._size
 
     def __getitem__(self, key):
-        try:
-            result = self._inner_list[hash(key) % self._size]
-        except KeyError:
-            return KeyError("Ключ не найден.")
-        if result is None:
-            return None
-        return result[1]
+        result = self._inner_list[hash(key) % self._size]
+        if result.length == 0:
+            raise KeyError("Ключ не найден.")
+        else:
+            for i in result:
+                if i[0] == key:
+                    return i[1]
+            raise KeyError("Ключ не найден.")
 
     def __setitem__(self, key, value):
-        self._inner_list[hash(key) % self._size] = (key, value)
-        self._cnt += 1
-        if self._cnt >= 0.8 * self._size:
-            self._size *= 2
-            # new_inner_list = [None] * self._size
-            new_inner_list = List().create_none(self._size)
-            for i in self._inner_list:
-                if i is not None:
-                    new_inner_list[hash(i[0]) % self._size] = i
-            self._inner_list = new_inner_list
+        if self._inner_list[hash(key) % self._size].length == 0:
+            self._cnt += 1
+        # changeable = self._inner_list[hash(key) % self._size]
+        flag = True
+        for i in range(self._inner_list[hash(key) % self._size].length):
+            if self._inner_list[hash(key) % self._size][i][0] == key:
+                self._inner_list[hash(key) % self._size][i] = (key, value)
+                flag = False
+                break
+        if flag:
+            self._inner_list[hash(key) % self._size].add_node((key, value))
+            if self._cnt >= 0.8 * self._size:
+                self._size *= 2
+                new_inner_list = List()
+                for _ in range(self._size):
+                    new_inner_list.add_node(List())
+                for i in self._inner_list:
+                    if i.length != 0:
+                        for j in i:
+                            new_inner_list[hash(j[0]) % self._size].add_node(j)
+                self._inner_list = new_inner_list
+                new_cnt = 0
+                for i in self._inner_list:
+                    if i.length != 0:
+                        new_cnt += 1
+                self._cnt = new_cnt
 
     def __delitem__(self, key):
         try:
-            self._inner_list[key] = None
+            deleted = self[key]
+            # changeable = self._inner_list[hash(key) % self._size]
+            self._inner_list[hash(key) % self._size].remove((key, deleted))
+            if self._inner_list[hash(key) % self._size].length == 0:
+                self._cnt -= 1
         except KeyError:
-            return KeyError("Ключ не найден.")
+            raise KeyError("Ключ не найден.")
+
+    '''
+    Сериализация - десериализация. Реализована не до конца: проблемы с учитыванием
+    типов данных, к которым относятся ключ и значение, при десериализации.
+    '''
 
     def to_string(self):
         result = ""
         for i in self._inner_list:
-            try:
-                result += str(i[0]) + "\t" + str(i[1])
-            except:
-                result += "None"
-            result += "\n"
+            if i.length != 0:
+                for j in i:
+                    result += str(j[0]) + "\t" + str(j[1]) + "\n"
+        result = result[:-2]
         return result
 
     @classmethod
     def from_string(cls, string):
-        st = string.split("\n")
-        result = HashMap(len(st))
+        st = string.splitlines()
+        result = HashMap(10)
         for i in st:
-            try:
-                j = i.split("\t")
-                result[int(j[0])] = j[1]
-            except:
-                continue
+            j = i.split("\t")
+            result[int(j[0])] = j[1]
         return result
+
+
+if __name__ == "__main__":
+    pass
