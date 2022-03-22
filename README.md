@@ -1,1 +1,2 @@
-# Informatics_two_term_Kharin_Ildar
+# iip_11-104
+# Kharin Ildar
