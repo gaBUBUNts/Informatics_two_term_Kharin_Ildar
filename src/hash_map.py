@@ -1,34 +1,108 @@
-def summa(a):
-    a = str(a)
+"""
+Модуль для создания Hash map.
+
+Классы:
+    Node:
+
+    HashMap:
+"""
+
+
+def summa(number: int) -> int:
+    """
+    Вычислить сумму цифр переданного числа.
+
+    :param int number:
+    :return: сумма цифр числа
+    """
+    number = str(number)
     rez = 0
-    for i in a:
+    for i in number:
         rez += int(i)
     return rez
 
 
 class Node:
+    """
+    Класс для создания узлов List.
+
+    Атрибуты:
+        data: данные хранящиеся в узле.
+
+        next: ссылка на следующий узел.
+    Функции:
+        compare_data: сравнить данные хранящиеся в узле с переданным значением.
+    """
+
     def __init__(self, data=None, next_node=None):
-        self.data = data
+        self._data = data
         self.next = next_node
 
-    def compare_data(self, value):
+    @property
+    def data(self):
+        """
+        Вернуть у экземпляра Node атрибут data.
+
+        :return: данные, хранящиеся в узле.
+        """
+        return self._data
+
+    @data.setter
+    def data(self, data):
+        self._data = data
+
+    def compare_data(self, value) -> bool:
+        """
+        Сравнить данные хранящиеся в узле с переданным значением.
+
+        :param value: значение
+        :return: true, если data ячейки совпадает с value, иначе false.
+        """
         return self.data == value
 
 
 class List:
+    """
+    Класс для создания односвязных списков.
+
+    Атрибуты:
+        head: первый узел списка
+
+        length: длина списка
+
+        node: атрибут для реализации итератора
+    Методы:
+        get last: Вернуть последний узел списка.
+
+        add_node: Добавить узел в конец списка.
+
+
+    """
+
     def __init__(self):
         self.head = None
         self.length = 0
         self.node = None
 
-    def get_last(self):
+    def get_last(self) -> Node:
+        """
+        Вернуть последний узел списка.
+
+        :return: последний узел списка.
+        """
         if self.length != 0:
             node = self.head
             while node.next is not None:
                 node = node.next
             return node
+        raise IndexError("Список пустой.")
 
-    def add_node(self, data):
+    def add_node(self, data) -> None:
+        """
+        Добавить узел в конец списка.
+
+        :param data: значение добавляемой ячейки.
+        """
         self.length += 1
         if not isinstance(data, Node):
             data = Node(data)
@@ -38,6 +112,12 @@ class List:
             self.get_last().next = data
 
     def search(self, value):
+        """
+        Найти узел по значению.
+
+        :param value: значение искомого узла.
+        :return: true, если узел есть в списке, false в обратном случае.
+        """
         node = self.head
         while node.next is not None:
             if node.compare_data(value):
@@ -47,7 +127,8 @@ class List:
             return True
         return False
 
-    def output(self):
+    def output(self) -> None:
+        """Вывести содержимое списка."""
         if self.head is None:
             print(None)
         else:
@@ -57,25 +138,28 @@ class List:
                 node = node.next
             print(node.data)
 
-    def input(self):
+    def input(self) -> None:
+        """Ввести данные в список с клавиатуры."""
         print("Чтобы закончить ввод напишите 'stop'.")
         condition = input()
         while True:
             if condition == "stop":
-                print("Закончить ввод? Дайте ответ 'yes' или 'no'.")
-                answer = input()
+                answer = input("Закончить ввод? Дайте ответ 'yes' или 'no'.\n")
                 if answer == "yes":
                     break
-                else:
-                    print("Добавить 'stop' в список? Дайте ответ 'yes' или 'no'.")
-                    answer = input()
-                    if answer == "no":
-                        condition = input()
+                answer = input("Добавить 'stop' в список? Дайте ответ 'yes' или 'no'.\n")
+                if answer == "no":
+                    condition = input()
             self.add_node(condition)
             self.length += 1
             condition = input()
 
     def max(self):
+        """
+        Вернуть наибольший элемент списка.
+
+        :return: наибольший элемент списка.
+        """
         rez = self.head.data
         node = self.head
         while node.next is not None:
@@ -85,6 +169,11 @@ class List:
         return rez
 
     def sum(self):
+        """
+        Вернуть сумму всех элементов списка.
+
+        :return: сумма всех элементов списка.
+        """
         rez = self.head.data
         node = self.head
         while node.next is not None:
@@ -93,6 +182,11 @@ class List:
         return rez
 
     def check_negative(self):
+        """
+        Проверить список на наличие отрицательных чисел.
+
+        :return: true, если есть отрицательные числа в списке, в противном случае false.
+        """
         node = self.head
         if node.data < 0:
             return True
@@ -102,11 +196,13 @@ class List:
             node = node.next
         return False
 
-    def del_head(self):
+    def del_head(self) -> None:
+        """Удалить первый элемент списка."""
         self.head = self.head.next
         self.length -= 1
 
-    def del_tail(self):
+    def del_tail(self) -> None:
+        """Удалить последний элемент списка."""
         if self.length == 1:
             self.head = None
             self.length -= 1
@@ -117,7 +213,8 @@ class List:
             node.next = None
             self.length -= 1
 
-    def del_penultimate(self):
+    def del_penultimate(self) -> None:
+        """Удалить предпоследний элемент списка."""
         if self.length == 2:
             self.del_head()
             self.length -= 1
@@ -128,7 +225,15 @@ class List:
             node.next = node.next.next
             self.length -= 1
 
-    def remove(self, value, for_all=False):
+    def remove(self, value, for_all=False) -> None:
+        """
+        Удалить первый равный value элемент списка. Удалить все
+        элементы списка равные value, если for_all == true.
+
+        :param value: значение удаляемого элемента.
+        :param bool for_all: указатель на поведение удаления: удалять все
+        элементы равные value или только первый элемент.
+        """
         node = self.head
         if node.compare_data(value):
             self.del_head()
@@ -145,7 +250,12 @@ class List:
             node.next = node.next.next
             self.length -= 1
 
-    def border(self, value, fringing):
+    def border(self, value, fringing) -> None:
+        """Вставить до и после первого равного value элемента списка элементы fringing.
+
+        :param value: значение элемента, вокруг которого нужно вставить новые элементы.
+        :param fringing: значение вставляемых элементов.
+        """
         node = self.head
         if node.compare_data(value):
             self.head = Node(fringing, node)
@@ -158,21 +268,13 @@ class List:
             node = node.next
         self.length += 2
 
-    def reverse(self):
+    def reverse(self) -> None:
+        """Развернуть список."""
         new_list = List()
         for _ in range(self.length):
             new_list.add_node(self.get_last())
             self.del_tail()
         self.head = new_list.head
-
-    def input_file(self):
-        file_name = input("Введите имя файла: ")
-        with open(file_name) as file:
-            while True:
-                try:
-                    self.add_node(int(file.readline()))
-                except:
-                    break
 
     def __iter__(self):
         self.node = self.head
@@ -195,6 +297,7 @@ class List:
                 node = node.next
                 i += 1
             return node.data
+        raise IndexError
 
     def __setitem__(self, key, value):
         if self.length >= key:
@@ -207,14 +310,19 @@ class List:
                 i += 1
             node.data = value
 
-    def create_none(self, size):
-        if self.length == 0:
-            for _ in range(size):
-                self.add_node(None)
-            return self
-
 
 class HashMap:
+    """
+    Класс для создания hashmap.
+
+    Атрибуты:
+        inner_list: список элементов.
+
+        size: вместимость.
+
+        cnt: количество элементов.
+    """
+
     def __init__(self, _size):
         self._inner_list = List()
         for _ in range(_size):
@@ -223,17 +331,39 @@ class HashMap:
         self._cnt = 0
 
     def get_size(self):
+        """
+        Вернуть вместимость hashmap.
+
+        :return int _size: вместимость hashmap.
+        """
         return self._size
+
+    @property
+    def inner_list(self):
+        """
+        Вернуть список элементов hashmap.
+
+        :return: список элементов hashmap.
+        """
+        return self._inner_list
+
+    @property
+    def cnt(self):
+        """
+        Вернуть количество элементов hashmap.
+
+        :return: количество элементов hashmap.
+        """
+        return self._cnt
 
     def __getitem__(self, key):
         result = self._inner_list[hash(key) % self._size]
         if result.length == 0:
             raise KeyError("Ключ не найден.")
-        else:
-            for i in result:
-                if i[0] == key:
-                    return i[1]
-            raise KeyError("Ключ не найден.")
+        for i in result:
+            if i[0] == key:
+                return i[1]
+        raise KeyError("Ключ не найден.")
 
     def __setitem__(self, key, value):
         if self._inner_list[hash(key) % self._size].length == 0:
@@ -264,37 +394,10 @@ class HashMap:
                 self._cnt = new_cnt
 
     def __delitem__(self, key):
-        try:
-            deleted = self[key]
-            # changeable = self._inner_list[hash(key) % self._size]
-            self._inner_list[hash(key) % self._size].remove((key, deleted))
-            if self._inner_list[hash(key) % self._size].length == 0:
-                self._cnt -= 1
-        except KeyError:
-            raise KeyError("Ключ не найден.")
-
-    '''
-    Сериализация - десериализация. Реализована не до конца: проблемы с учитыванием
-    типов данных, к которым относятся ключ и значение, при десериализации.
-    '''
-
-    def to_string(self):
-        result = ""
-        for i in self._inner_list:
-            if i.length != 0:
-                for j in i:
-                    result += str(j[0]) + "\t" + str(j[1]) + "\n"
-        result = result[:-2]
-        return result
-
-    @classmethod
-    def from_string(cls, string):
-        st = string.splitlines()
-        result = HashMap(10)
-        for i in st:
-            j = i.split("\t")
-            result[int(j[0])] = j[1]
-        return result
+        deleted = self[key]
+        self._inner_list[hash(key) % self._size].remove((key, deleted))
+        if self._inner_list[hash(key) % self._size].length == 0:
+            self._cnt -= 1
 
 
 if __name__ == "__main__":
