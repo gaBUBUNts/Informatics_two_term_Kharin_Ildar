@@ -9,8 +9,8 @@
 
 
 import unittest
-from src.hash_map import HashMap
-from src.tree_map import TreeMap
+from src.maps.hash_map import HashMap
+from src.maps.tree_map import TreeMap
 
 
 class SetGetDelCase(unittest.TestCase):
@@ -165,6 +165,7 @@ class SetGetDelCase(unittest.TestCase):
 class HashMapTests(unittest.TestCase):
     """
     Класс для тестирования особых функций HashMap.
+
     Атрибуты:
         hashmap: экземпляр класса HashMap.
 
