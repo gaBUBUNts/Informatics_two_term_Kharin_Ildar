@@ -7,8 +7,8 @@
     HashMapTests: Класс для тестирования увеличения объема HashMap.
 """
 
-
 import unittest
+from test import mapping_tests
 from src.maps.hash_map import HashMap
 from src.maps.tree_map import TreeMap
 
@@ -30,17 +30,31 @@ class SetGetDelCase(unittest.TestCase):
 
         test_del_item: Тест функции del в HashMap и TreeMap.
     """
+
     def setUp(self) -> None:
         self.hash_map = HashMap(10)
         self.tree_map = TreeMap()
         self.one_small_tree_map = TreeMap()
         self.two_small_tree_map = TreeMap()
+        self.tree_map[8] = "8"
+        self.tree_map[3] = "3"
+        self.tree_map[12] = "12"
+        self.tree_map[1] = "1"
+        self.tree_map[6] = "6"
+        self.tree_map[0] = "0"
+        self.tree_map[2] = "2"
+        self.tree_map[4] = "4"
+        self.tree_map[7] = "7"
+        self.tree_map[5] = "5"
+        self.tree_map[10] = "10"
+        self.tree_map[14] = "14"
+        self.tree_map[11] = "11"
 
     def test_set_get_item(self):
         """Тест функций set и get в HashMap и TreeMap."""
         # Создание экземпляра HashMap.
         for i in range(5):
-            self.hash_map[i*10] = i*10+5
+            self.hash_map[i * 10] = i * 10 + 5
             self.hash_map[i] = i
         # Проверка функции set в HashMap.
         self.assertEqual(self.hash_map[1], 1)
@@ -81,20 +95,6 @@ class SetGetDelCase(unittest.TestCase):
 
     def test_del_root_tree_map(self):
         """Тест функции del в TreeMap."""
-        self.tree_map[8] = "8"
-        self.tree_map[3] = "3"
-        self.tree_map[12] = "12"
-        self.tree_map[1] = "1"
-        self.tree_map[6] = "6"
-        self.tree_map[0] = "0"
-        self.tree_map[2] = "2"
-        self.tree_map[4] = "4"
-        self.tree_map[7] = "7"
-        self.tree_map[5] = "5"
-        self.tree_map[10] = "10"
-        self.tree_map[14] = "14"
-        self.tree_map[11] = "11"
-
         # Удаление корня во всех возможных вариациях.
         del self.tree_map[8]
         self.assertEqual(self.tree_map.root.key, 10)
@@ -176,18 +176,74 @@ class HashMapTests(unittest.TestCase):
     def setUp(self) -> None:
         self.hashmap = HashMap(10)
         for i in range(5):
-            self.hashmap[i*10] = i*10
+            self.hashmap[i * 10] = i * 10
             self.hashmap[i] = i
-        # self.solution = "0\t0\n1\t1\n2\t2\n3\t3\n4\t4\nNone\nNone\nNone\nNone\nNone\n"
 
     def test_increase(self):
         """Тест увеличения вместимости hashmap при добавлении элементов."""
         for i in range(5, 8):
-            self.hashmap[i*10] = i*10
+            self.hashmap[i * 10] = i * 10
             self.hashmap[i] = i
         self.assertEqual(self.hashmap.cnt, 9)
         self.assertEqual(self.hashmap.get_size(), 20)
         self.assertEqual(self.hashmap.inner_list[0].length, 4)
+
+
+class GeneralMappingTests(mapping_tests.BasicTestMappingProtocol):
+    """
+    mocked test_read
+    """
+    type2test = HashMap
+
+    def test_read(self):
+        # Test for read only operations on mapping
+        p = self._empty_mapping()
+        p1 = dict(p)  # workaround for singleton objects
+        d = self._full_mapping(self.reference)
+        if d is p:
+            p = p1
+        # Indexing
+        for key, value in self.reference.items():
+            self.assertEqual(d[key], value)
+        knownkey = list(self.other.keys())[0]
+        self.assertRaises(KeyError, lambda: d[knownkey])
+        # len
+        self.assertEqual(len(p), 0)
+        self.assertEqual(len(d), len(self.reference))
+        # __contains__
+        for k in self.reference:
+            self.assertIn(k, d)
+        for k in self.other:
+            self.assertNotIn(k, d)
+        # cmp
+        self.assertEqual(p, p)
+        self.assertEqual(d, d)
+        self.assertNotEqual(p, d)
+        self.assertNotEqual(d, p)
+        # bool
+        if p: self.fail("Empty mapping must compare to False")
+        if not d: self.fail("Full mapping must compare to True")
+
+        # keys(), items(), iterkeys() ...
+        def check_iterandlist(iter, lst, ref):
+            self.assertTrue(hasattr(iter, '__next__'))
+            self.assertTrue(hasattr(iter, '__iter__'))
+            x = list(iter)
+            self.assertTrue(set(x) == set(lst) == set(ref))
+
+        check_iterandlist(iter(d.keys()), list(d.keys()),
+                          self.reference.keys())
+        check_iterandlist(iter(d.keys()), list(d.keys()), self.reference.keys())
+        check_iterandlist(iter(d.values()), list(d.values()),
+                          self.reference.values())
+        check_iterandlist(iter(d.items()), list(d.items()),
+                          self.reference.items())
+        # get
+        key, value = next(iter(d.items()))
+        knownkey, knownvalue = next(iter(self.other.items()))
+        self.assertEqual(d.get(key, knownvalue), value)
+        self.assertEqual(d.get(knownkey, knownvalue), knownvalue)
+        self.assertNotIn(knownkey, d)
 
 
 if __name__ == '__main__':

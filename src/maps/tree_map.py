@@ -163,15 +163,23 @@ class TreeMap(BaseMap):
     def __len__(self):
         return self.length
 
+    def __bool__(self):
+        return len(self) != 0
+
+    def clear(self):
+        self.root = None
+
 
 if __name__ == "__main__":
     tree = TreeMap()
-    tree[6] = "kekw"
-    tree[3] = "waba"
-    tree[5] = "yolo"
-    tree[2] = "ratat"
-    tree[8] = "elims"
-    tree[10] = "popoya"
-    tree[7] = "gogol"
-    for i in tree:
-        print(i)
+    tree["kekw"] = 6
+    tree["waba"] = 3
+    tree["yolo"] = 5
+    tree["ratat"] = 2
+    tree["elims"] = 8
+    tree["popoya"] = 10
+    tree["gogol"] = 7
+    tree.write(r"D:\For_Python\Informatics_two_term_Kharin_Ildar\src\popa.txt")
+    new_tree = TreeMap.read(r"D:\For_Python\Informatics_two_term_Kharin_Ildar\src\popa.txt")
+    for key, value in new_tree:
+        print((key, value))

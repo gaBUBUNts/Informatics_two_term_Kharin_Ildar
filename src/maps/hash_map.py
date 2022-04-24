@@ -7,22 +7,7 @@
     HashMap:
 """
 
-
 from src.maps.base_map import BaseMap
-
-
-def summa(number: int) -> int:
-    """
-    Вычислить сумму цифр переданного числа.
-
-    :param int number:
-    :return: сумма цифр числа
-    """
-    number = str(number)
-    rez = 0
-    for i in number:
-        rez += int(i)
-    return rez
 
 
 class Node:
@@ -114,22 +99,6 @@ class List:
         else:
             self.get_last().next = data
 
-    def search(self, value):
-        """
-        Найти узел по значению.
-
-        :param value: значение искомого узла.
-        :return: true, если узел есть в списке, false в обратном случае.
-        """
-        node = self.head
-        while node.next is not None:
-            if node.compare_data(value):
-                return True
-            node = node.next
-        if node.compare_data(value):
-            return True
-        return False
-
     def output(self) -> None:
         """Вывести содержимое списка."""
         if self.head is None:
@@ -157,48 +126,6 @@ class List:
             self.length += 1
             condition = input()
 
-    def max(self):
-        """
-        Вернуть наибольший элемент списка.
-
-        :return: наибольший элемент списка.
-        """
-        rez = self.head.data
-        node = self.head
-        while node.next is not None:
-            if rez < node.next.data:
-                rez = node.next.data
-            node = node.next
-        return rez
-
-    def sum(self):
-        """
-        Вернуть сумму всех элементов списка.
-
-        :return: сумма всех элементов списка.
-        """
-        rez = self.head.data
-        node = self.head
-        while node.next is not None:
-            rez += node.next.data
-            node = node.next
-        return rez
-
-    def check_negative(self):
-        """
-        Проверить список на наличие отрицательных чисел.
-
-        :return: true, если есть отрицательные числа в списке, в противном случае false.
-        """
-        node = self.head
-        if node.data < 0:
-            return True
-        while node.next is not None:
-            if node.next.data < 0:
-                return True
-            node = node.next
-        return False
-
     def del_head(self) -> None:
         """Удалить первый элемент списка."""
         self.head = self.head.next
@@ -214,18 +141,6 @@ class List:
             while node.next.next is not None:
                 node = node.next
             node.next = None
-            self.length -= 1
-
-    def del_penultimate(self) -> None:
-        """Удалить предпоследний элемент списка."""
-        if self.length == 2:
-            self.del_head()
-            self.length -= 1
-        elif self.length > 2:
-            node = self.head
-            while node.next.next.next is not None:
-                node = node.next
-            node.next = node.next.next
             self.length -= 1
 
     def remove(self, value, for_all=False) -> None:
@@ -252,32 +167,6 @@ class List:
         if node.next.compare_data(value):
             node.next = node.next.next
             self.length -= 1
-
-    def border(self, value, fringing) -> None:
-        """Вставить до и после первого равного value элемента списка элементы fringing.
-
-        :param value: значение элемента, вокруг которого нужно вставить новые элементы.
-        :param fringing: значение вставляемых элементов.
-        """
-        node = self.head
-        if node.compare_data(value):
-            self.head = Node(fringing, node)
-            node.next = Node(fringing, node.next)
-        while node.next is not None:
-            if node.next.compare_data(value):
-                node.next.next = Node(fringing, node.next.next)
-                node.next = Node(fringing, node.next)
-                return
-            node = node.next
-        self.length += 2
-
-    def reverse(self) -> None:
-        """Развернуть список."""
-        new_list = List()
-        for _ in range(self.length):
-            new_list.add_node(self.get_last())
-            self.del_tail()
-        self.head = new_list.head
 
     def __iter__(self):
         self.node = self.head
@@ -410,6 +299,17 @@ class HashMap(BaseMap):
             for j in i:
                 temp.add_node(j)
         return temp.__iter__()
+
+    def __bool__(self):
+        return len(self) != 0
+
+    def clear(self):
+        """Очистка экземпляра HashMap"""
+        self._size = 10
+        self._cnt = 0
+        self._inner_list = List()
+        for _ in range(10):
+            self._inner_list.add_node(List())
 
 
 if __name__ == "__main__":
