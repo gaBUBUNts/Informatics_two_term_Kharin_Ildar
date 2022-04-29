@@ -33,18 +33,15 @@ def convert_to_word(string):
     :param string:строка, содержащая слова
     :return:слова из строки без специальных символов
     """
-    string = string.replace(".", "")
-    string = string.replace(":", "")
-    string = string.replace(";", "")
-    string = string.replace(",", "")
-    string = string.replace("«", "")
-    string = string.replace("»", "")
+    for i in ".:;,«»°()":
+        string = string.replace(i, "")
     temp = []
     for word in string.split():
-        if word[0] in r"""`~1234567890!@#$%^&*()-=_+[]{}\|/,.?'"№:;""":
-            temp.append(None)
-        else:
+        if word[0] in "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" \
+                      "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ":
             temp.append(word)
+        else:
+            temp.append(None)
     return temp
 
 
@@ -55,6 +52,13 @@ def add_base_path(base_path):
     else:
         os.mkdir(base_path)
         print("Папка base_path создана.\n", end="")
+
+
+def from_list_to_file(lis, path):
+    """Записать в файл список кортежей (key, value)"""
+    with open(path, "w", encoding="utf-8") as file:
+        for i in lis:
+            file.write(f"{i[0]}\t{i[1]}\n")
 
 
 def wiki_parser(url: str, base_path):
@@ -110,7 +114,7 @@ def wiki_parser(url: str, base_path):
                     hash_map[word] += 1
                 except KeyError:
                     hash_map[word] = 1
-        hash_map.write(os.path.join(path, "words.txt"))
+        from_list_to_file(sorted(hash_map, key=lambda x: x[0]), os.path.join(path, "words.txt"))
         # Вернуть список всех ссылок на вики.
         href_list = []
         for tag in soup.find_all(href=re.compile("^/wiki/")):
@@ -120,7 +124,5 @@ def wiki_parser(url: str, base_path):
 
 
 if __name__ == "__main__":
-    rez = wiki_parser('https://ru.wikipedia.org/wiki/Чёрмозский_завод',
-                      r'D:\For_Python\Informatics_two_term_Kharin_Ildar\src')
-    for j in rez:
-        print(j)
+    wiki_parser('https://ru.wikipedia.org/wiki/Чёрмозский_завод',
+                r'D:\For_Python\Informatics_two_term_Kharin_Ildar\src')

@@ -311,6 +311,9 @@ class HashMap(BaseMap):
         for _ in range(10):
             self._inner_list.add_node(List())
 
-
-if __name__ == "__main__":
-    pass
+    def set_from_list(self, lis):
+        """Добавить в мапу элементы из списка, где каждый элемент
+        это итерируемый объект из ключа и значения"""
+        self.clear()
+        for i in lis:
+            self[i[0]] = i[1]
