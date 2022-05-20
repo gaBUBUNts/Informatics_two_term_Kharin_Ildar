@@ -18,7 +18,7 @@ def multi(mode, url, base_path, max_workers=5, deep=3):
     :param max_workers: максимальное количество потоков или процессов
     """
     beginning = wiki_parser(url, base_path)
-    for _ in range(deep - 1):
+    for _ in range(deep - 2):
         executor = mode(max_workers=max_workers)
         temp = []
         futures = [executor.submit(wiki_parser, url, path)

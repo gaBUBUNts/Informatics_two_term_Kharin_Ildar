@@ -167,19 +167,5 @@ class TreeMap(BaseMap):
         return len(self) != 0
 
     def clear(self):
+        """ D.clear() -> None.  Remove all items from D. """
         self.root = None
-
-
-if __name__ == "__main__":
-    tree = TreeMap()
-    tree["kekw"] = 6
-    tree["waba"] = 3
-    tree["yolo"] = 5
-    tree["ratat"] = 2
-    tree["elims"] = 8
-    tree["popoya"] = 10
-    tree["gogol"] = 7
-    tree.write(r"D:\For_Python\Informatics_two_term_Kharin_Ildar\src\popa.txt")
-    new_tree = TreeMap.read(r"D:\For_Python\Informatics_two_term_Kharin_Ildar\src\popa.txt")
-    for key, value in new_tree:
-        print((key, value))

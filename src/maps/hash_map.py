@@ -317,3 +317,12 @@ class HashMap(BaseMap):
         self.clear()
         for i in lis:
             self[i[0]] = i[1]
+
+#
+# if __name__ == "__main__":
+#     test = HashMap()
+#     test["aba"] = 1
+#     test["baba"] = 2
+#     test.write(r"D:\For_Python\informatics_two_term_Kharin_Ildar\testtest.txt")
+#     aboba = HashMap.read(r"D:\For_Python\informatics_two_term_Kharin_Ildar\testtest.txt")
+#     print(aboba["aba"], aboba["baba"])
