@@ -8,6 +8,9 @@
 """
 
 
+from src.maps.base_map import BaseMap
+
+
 class Knot:
     """
     Класс для создания узлов дерева двоичного поиска.
@@ -57,7 +60,7 @@ class Knot:
         raise TypeError
 
 
-class TreeMap:
+class TreeMap(BaseMap):
     """
     Класс для создания дерева двоичного поиска.
 
@@ -74,6 +77,7 @@ class TreeMap:
 
     def __init__(self, root=None):
         self.root = root
+        self.length = 0
 
     def __setitem__(self, key, data):
         def inner_setitem(knot):
@@ -89,6 +93,7 @@ class TreeMap:
             return knot
 
         self.root = inner_setitem(self.root)
+        self.length += 1
 
     def __getitem__(self, key):
         def inner_getitem(knot):
@@ -144,3 +149,23 @@ class TreeMap:
             raise KeyError
 
         self.root = inner_delitem(self.root, key)
+        self.length -= 1
+
+    def __iter__(self):
+        def iter_node(node):
+            if node is not None:
+                yield from iter_node(node.left)
+                yield node.key, node.data
+                yield from iter_node(node.right)
+
+        yield from iter_node(self.root)
+
+    def __len__(self):
+        return self.length
+
+    def __bool__(self):
+        return len(self) != 0
+
+    def clear(self):
+        """ D.clear() -> None.  Remove all items from D. """
+        self.root = None

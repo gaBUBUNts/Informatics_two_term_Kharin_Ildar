@@ -7,10 +7,9 @@
     HashMapTests: Класс для тестирования увеличения объема HashMap.
 """
 
-
 import unittest
-from src.hash_map import HashMap
-from src.tree_map import TreeMap
+from src.maps.hash_map import HashMap
+from src.maps.tree_map import TreeMap
 
 
 class SetGetDelCase(unittest.TestCase):
@@ -30,17 +29,31 @@ class SetGetDelCase(unittest.TestCase):
 
         test_del_item: Тест функции del в HashMap и TreeMap.
     """
+
     def setUp(self) -> None:
         self.hash_map = HashMap(10)
         self.tree_map = TreeMap()
         self.one_small_tree_map = TreeMap()
         self.two_small_tree_map = TreeMap()
+        self.tree_map[8] = "8"
+        self.tree_map[3] = "3"
+        self.tree_map[12] = "12"
+        self.tree_map[1] = "1"
+        self.tree_map[6] = "6"
+        self.tree_map[0] = "0"
+        self.tree_map[2] = "2"
+        self.tree_map[4] = "4"
+        self.tree_map[7] = "7"
+        self.tree_map[5] = "5"
+        self.tree_map[10] = "10"
+        self.tree_map[14] = "14"
+        self.tree_map[11] = "11"
 
     def test_set_get_item(self):
         """Тест функций set и get в HashMap и TreeMap."""
         # Создание экземпляра HashMap.
         for i in range(5):
-            self.hash_map[i*10] = i*10+5
+            self.hash_map[i * 10] = i * 10 + 5
             self.hash_map[i] = i
         # Проверка функции set в HashMap.
         self.assertEqual(self.hash_map[1], 1)
@@ -81,20 +94,6 @@ class SetGetDelCase(unittest.TestCase):
 
     def test_del_root_tree_map(self):
         """Тест функции del в TreeMap."""
-        self.tree_map[8] = "8"
-        self.tree_map[3] = "3"
-        self.tree_map[12] = "12"
-        self.tree_map[1] = "1"
-        self.tree_map[6] = "6"
-        self.tree_map[0] = "0"
-        self.tree_map[2] = "2"
-        self.tree_map[4] = "4"
-        self.tree_map[7] = "7"
-        self.tree_map[5] = "5"
-        self.tree_map[10] = "10"
-        self.tree_map[14] = "14"
-        self.tree_map[11] = "11"
-
         # Удаление корня во всех возможных вариациях.
         del self.tree_map[8]
         self.assertEqual(self.tree_map.root.key, 10)
@@ -165,6 +164,7 @@ class SetGetDelCase(unittest.TestCase):
 class HashMapTests(unittest.TestCase):
     """
     Класс для тестирования особых функций HashMap.
+
     Атрибуты:
         hashmap: экземпляр класса HashMap.
 
@@ -175,14 +175,13 @@ class HashMapTests(unittest.TestCase):
     def setUp(self) -> None:
         self.hashmap = HashMap(10)
         for i in range(5):
-            self.hashmap[i*10] = i*10
+            self.hashmap[i * 10] = i * 10
             self.hashmap[i] = i
-        # self.solution = "0\t0\n1\t1\n2\t2\n3\t3\n4\t4\nNone\nNone\nNone\nNone\nNone\n"
 
     def test_increase(self):
         """Тест увеличения вместимости hashmap при добавлении элементов."""
         for i in range(5, 8):
-            self.hashmap[i*10] = i*10
+            self.hashmap[i * 10] = i * 10
             self.hashmap[i] = i
         self.assertEqual(self.hashmap.cnt, 9)
         self.assertEqual(self.hashmap.get_size(), 20)
