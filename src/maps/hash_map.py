@@ -216,9 +216,9 @@ class HashMap(BaseMap):
     """
 
     def __init__(self, _size=10):
-        self._inner_list = List()
+        self._inner_list = []
         for _ in range(_size):
-            self._inner_list.add_node(List())
+            self._inner_list.append(List())
         self._size = _size
         self._cnt = 0
 
@@ -258,16 +258,17 @@ class HashMap(BaseMap):
         raise KeyError("Ключ не найден.")
 
     def __setitem__(self, key, value):
-        if self._inner_list[hash(key) % self._size].length == 0:
+        hash_key = hash(key) % self._size
+        if self._inner_list[hash_key].length == 0:
             self._cnt += 1
         flag = True
-        for i in range(self._inner_list[hash(key) % self._size].length):
-            if self._inner_list[hash(key) % self._size][i][0] == key:
-                self._inner_list[hash(key) % self._size][i] = (key, value)
+        for i in range(self._inner_list[hash_key].length):
+            if self._inner_list[hash_key][i][0] == key:
+                self._inner_list[hash_key][i] = (key, value)
                 flag = False
                 break
         if flag:
-            self._inner_list[hash(key) % self._size].add_node((key, value))
+            self._inner_list[hash_key].add_node((key, value))
             if self._cnt >= 0.8 * self._size:
                 self._size *= 2
                 new_inner_list = List()
@@ -291,13 +292,16 @@ class HashMap(BaseMap):
             self._cnt -= 1
 
     def __len__(self):
-        return self.__iter__().length
+        temp = 0
+        for _ in self:
+            temp += 1
+        return temp
 
     def __iter__(self):
-        temp = List()
+        temp = []
         for i in self._inner_list:
             for j in i:
-                temp.add_node(j)
+                temp.append(j)
         return temp.__iter__()
 
     def __bool__(self):
@@ -321,8 +325,13 @@ class HashMap(BaseMap):
 #
 # if __name__ == "__main__":
 #     test = HashMap()
-#     test["aba"] = 1
-#     test["baba"] = 2
+#     test[40] = 1
+#     test[30] = 2
+#     test[10] = 4
+#     test[20] = 6
 #     test.write(r"D:\For_Python\informatics_two_term_Kharin_Ildar\testtest.txt")
 #     aboba = HashMap.read(r"D:\For_Python\informatics_two_term_Kharin_Ildar\testtest.txt")
-#     print(aboba["aba"], aboba["baba"])
+#     for i in test:
+#         print(i)
+#     print(len(test))
+#     test._inner_list[0].output()
