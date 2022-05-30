@@ -26,13 +26,13 @@ def tree_lenght(tree: tuple or None) -> int:
 
 class VersionedTree:
     def __init__(self):
-        self.versions = [None]
+        self.__versions = [None]
 
     def add(self, value: int) -> None:
-        self.versions.append(add(self.versions[-1], value))
+        self.__versions.append(add(self.__versions[-1], value))
 
     def contains(self, version: int, value: int) -> bool:
-        return contains(self.versions[version], value)
+        return contains(self.__versions[version], value)
 
     def height(self, version: int) -> int:
-        return tree_lenght(self.versions[version])
+        return tree_lenght(self.__versions[version])
